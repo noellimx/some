@@ -1,8 +1,8 @@
 package main
 
 import (
+	"example/greetings/calculator"
 	"example/greetings/simpletypes"
-	"example/greetings/truefalse"
 	"fmt"
 )
 
@@ -21,7 +21,9 @@ func main() {
 	simpletypes.FooTyping()
 	simpletypes.Activity()
 
-	truefalse.Activity()
+	// truefalse.Activity()
+
+	calculator.Activity()
 
 	fmt.Println("Bye Go World")
 
