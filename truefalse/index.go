@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// Page 11
 var min int = 1
 var max int = 100
 

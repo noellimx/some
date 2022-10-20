@@ -6,6 +6,8 @@ import (
 	"example/greetings/utils"
 )
 
+// Page 8
+
 func FooTyping() {
 
 	int1 := 24
