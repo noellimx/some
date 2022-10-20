@@ -19,6 +19,8 @@ func main() {
 
 	simpletypes.FooTyping()
 
+	simpletypes.Activity()
+
 	fmt.Println("Bye Go World")
 
 }
