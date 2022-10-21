@@ -8,7 +8,7 @@ type typeOpMap map[string]typeBinaryOperator
 
 var operations typeOpMap
 
-func Activity() {
+func Activity1() {
 
 	var (
 		a int

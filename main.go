@@ -1,7 +1,7 @@
 package main
 
 import (
-	"example/greetings/calculator"
+	"example/greetings/currency"
 	"example/greetings/simpletypes"
 	"fmt"
 )
@@ -23,8 +23,8 @@ func main() {
 
 	// truefalse.Activity()
 
-	calculator.Activity()
+	// calculator.Activity1()
 
-	fmt.Println("Bye Go World")
-
+	currency.Activity()
+	fmt.Println("Bye Go Worlda")
 }
