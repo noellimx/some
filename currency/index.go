@@ -1,6 +1,8 @@
 package currency
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type f64 float64
 
@@ -14,6 +16,7 @@ const (
 	SGD CURR = "SGD"
 	MYR CURR = "MYR"
 	EUR CURR = "EUR"
+	UNK CURR = ""
 )
 
 var cmapFromEUR map[CURR]f64 = map[CURR]f64{
@@ -54,7 +57,7 @@ func Activity() {
 
 	fmt.Println("Amount: ")
 
-	fmt.Scanln(&amt)
+	fmt.Scan(&amt)
 
 	fmt.Println("To Currency: ")
 
@@ -67,9 +70,8 @@ func Activity() {
 	}()
 
 	euros := currConvertToEUR(fromC, amt)
-
 	toAmt := currConvertFromEUR(toC, euros)
-
 	toAmt2 := currConvertFromTo(fromC, toC, amt)
-	fmt.Printf("%s %0.8f -> %s %0.8f %0.8f", fromC, amt, toC, toAmt, toAmt2)
+
+	fmt.Printf("%s %0.8f -> %s [result1]%0.8f [result2]%0.8f *result1 ≈≈ result2\n", fromC, amt, toC, toAmt, toAmt2)
 }
