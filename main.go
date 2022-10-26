@@ -1,8 +1,10 @@
 package main
 
 import (
+	"example/greetings/calculator"
 	"example/greetings/currency"
 	"example/greetings/simpletypes"
+	"example/greetings/truefalse"
 	"fmt"
 )
 
@@ -18,13 +20,12 @@ func WithinFunctionString() {
 func main() {
 	fmt.Println("Hello Go World")
 
-	simpletypes.FooTyping()
-	simpletypes.Activity()
-
-	// truefalse.Activity()
-
-	// calculator.Activity1()
-
-	currency.Activity()
 	fmt.Println("Bye Go Worlda")
+}
+
+func Implemented() {
+	calculator.Activity1()
+	currency.Activity()
+	simpletypes.Activity()
+	truefalse.Activity()
 }
