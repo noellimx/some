@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -116,9 +117,13 @@ type finisher func(*gin.Context) (int, interface{})
 func defaultFinisher(*gin.Context) (int, interface{}) {
 	return 1, struct{}{}
 }
-func NewBaEngine() *BaEngine {
+func NewBaEngine(engine *gin.Engine) *BaEngine {
+	if engine != nil {
+		log.Fatalf("init fail: nil engine")
+	}
+
 	return &BaEngine{
-		IRoutes:  gin.New(),
+		IRoutes:  engine,
 		finisher: defaultFinisher,
 	}
 }
@@ -151,8 +156,7 @@ func main() {
 	gGrp := g.Group("/aa", f)
 	gGrp.Use(someMiddleWare) // IRoutes cannot Group after Use
 	gGrp.GET("/aa", func(c *gin.Context) {})
-
-	h := NewBaEngine()
+	h := NewBaEngine(g)
 
 	h.Use(customMW)
 	h.GET("/", func(ctx *gin.Context) (int, interface{}) {
