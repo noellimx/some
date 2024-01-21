@@ -6,7 +6,7 @@ import (
 )
 
 type Finisher func(HandlerBody) gin.HandlerFunc
-type HandlerBody func(c *gin.Context) int
+type HandlerBody func(c *gin.Context) (int, interface{})
 
 type Engine struct {
 	*gin.Engine
@@ -136,13 +136,18 @@ func (e *Engine) SetFinisher(finisher Finisher) *Engine {
 	}
 }
 
+func defaultJSONFinisher() func(body HandlerBody) gin.HandlerFunc {
+	return func(body HandlerBody) gin.HandlerFunc {
+		return func(c *gin.Context) {
+			httpStatus, resp := body(c)
+			c.JSON(httpStatus, resp)
+		}
+	}
+}
+
 func NewEngine() *Engine {
 	return &Engine{
-		Engine: gin.New(),
-		finisher: func(body HandlerBody) gin.HandlerFunc {
-			return func(c *gin.Context) {
-				body(c)
-			}
-		},
+		Engine:   gin.New(),
+		finisher: defaultJSONFinisher(),
 	}
 }
