@@ -97,8 +97,8 @@ func (e *Engine) StaticFile(relativePath string, filepath string) IRoutes {
 	return e.returnObject(ir)
 }
 
-func (e *Engine) StaticFileFS(relativePath string, filepath string, system http.FileSystem) IRoutes {
-	ir := e.Engine.StaticFileFS(relativePath, filepath, system)
+func (e *Engine) StaticFileFS(relativePath string, filepath string, fs http.FileSystem) IRoutes {
+	ir := e.Engine.StaticFileFS(relativePath, filepath, fs)
 	return e.returnObject(ir)
 }
 
@@ -107,8 +107,8 @@ func (e *Engine) Static(relativePath string, filepath string) IRoutes {
 	return e.returnObject(ir)
 }
 
-func (e *Engine) StaticFS(relativePath string, system http.FileSystem) IRoutes {
-	ir := e.Engine.StaticFS(relativePath, system)
+func (e *Engine) StaticFS(relativePath string, fs http.FileSystem) IRoutes {
+	ir := e.Engine.StaticFS(relativePath, fs)
 	return e.returnObject(ir)
 }
 
