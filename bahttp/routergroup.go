@@ -49,73 +49,73 @@ func (r *RouterGroup) Use(handlerFunc ...gin.HandlerFunc) IRoutes {
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) Handle(s string, s2 string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.Handle(s, s2, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) Handle(httpMethod string, s2 string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.Handle(httpMethod, s2, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) Any(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.Any(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) Any(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.Any(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) GET(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.GET(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) GET(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.GET(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) POST(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.POST(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) POST(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.POST(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) DELETE(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.DELETE(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) DELETE(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.DELETE(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) PATCH(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.PATCH(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) PATCH(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.PATCH(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) PUT(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.PUT(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) PUT(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.PUT(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) OPTIONS(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.OPTIONS(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) OPTIONS(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.OPTIONS(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) HEAD(s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.HEAD(s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) HEAD(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.HEAD(httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) Match(strings []string, s string, handlerBodies ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.Match(strings, s, r.unwrap(handlerBodies...)...)
+func (r *RouterGroup) Match(strings []string, httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.Match(strings, httpMethod, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) StaticFile(s string, s2 string) IRoutes {
-	ir := r.RouterGroup.StaticFile(s, s2)
+func (r *RouterGroup) StaticFile(relativePath string, filepath string) IRoutes {
+	ir := r.RouterGroup.StaticFile(relativePath, filepath)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) StaticFileFS(s string, s2 string, system http.FileSystem) IRoutes {
-	ir := r.RouterGroup.StaticFileFS(s, s2, system)
+func (r *RouterGroup) StaticFileFS(relativePath string, filepath string, fs http.FileSystem) IRoutes {
+	ir := r.RouterGroup.StaticFileFS(relativePath, filepath, fs)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) Static(s string, s2 string) IRoutes {
-	ir := r.RouterGroup.Static(s, s2)
+func (r *RouterGroup) Static(relativePath string, filepath string) IRoutes {
+	ir := r.RouterGroup.Static(relativePath, filepath)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) StaticFS(s string, system http.FileSystem) IRoutes {
-	ir := r.RouterGroup.StaticFS(s, system)
+func (r *RouterGroup) StaticFS(relativePath string, fs http.FileSystem) IRoutes {
+	ir := r.RouterGroup.StaticFS(relativePath, fs)
 	return r.returnObject(ir)
 }
 
@@ -139,9 +139,8 @@ func (r *RouterGroup) SetFinisher(finisher Finisher) *RouterGroup {
 	}
 }
 
-func (r *RouterGroup) returnObject(ginIRoute gin.IRoutes) IRoutes {
-	switch v := ginIRoute.(type) {
-
+func (r *RouterGroup) returnObject(ginIRoutes gin.IRoutes) IRoutes {
+	switch v := ginIRoutes.(type) {
 	case *gin.Engine:
 		return &Engine{
 			Engine:   v,

@@ -112,9 +112,8 @@ func (e *Engine) StaticFS(relativePath string, system http.FileSystem) IRoutes {
 	return e.returnObject(ir)
 }
 
-func (e *Engine) returnObject(ginIRoute gin.IRoutes) IRoutes {
-	switch v := ginIRoute.(type) {
-
+func (e *Engine) returnObject(ginIRoutes gin.IRoutes) IRoutes {
+	switch v := ginIRoutes.(type) {
 	case *gin.Engine:
 		return &Engine{
 			Engine:   v,
