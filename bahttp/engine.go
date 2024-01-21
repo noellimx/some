@@ -21,7 +21,7 @@ func (e *Engine) unwrap(bS ...HandlerBody) gin.HandlersChain {
 
 	for _, b := range bS {
 		if b == nil {
-			panic("nil bAhandler")
+			panic("nil HandlerBody")
 		}
 
 		chain = append(chain, e.finisher(b))
@@ -42,73 +42,73 @@ func (e *Engine) Use(b ...gin.HandlerFunc) IRoutes {
 	return e.returnObject(ir)
 }
 
-func (e *Engine) Handle(s string, s2 string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.Handle(s, s2, e.unwrap(b...)...)
+func (e *Engine) Handle(httpMethod string, relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.Handle(httpMethod, relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) Any(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.Any(s, e.unwrap(b...)...)
+func (e *Engine) Any(httpMethod string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.Any(httpMethod, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) GET(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.GET(s, e.unwrap(b...)...)
+func (e *Engine) GET(relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.GET(relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) POST(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.POST(s, e.unwrap(b...)...)
+func (e *Engine) POST(relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.POST(relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) DELETE(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.DELETE(s, e.unwrap(b...)...)
+func (e *Engine) DELETE(relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.DELETE(relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) PATCH(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.PATCH(s, e.unwrap(b...)...)
+func (e *Engine) PATCH(relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.PATCH(relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) PUT(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.PUT(s, e.unwrap(b...)...)
+func (e *Engine) PUT(relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.PUT(relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) OPTIONS(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.OPTIONS(s, e.unwrap(b...)...)
+func (e *Engine) OPTIONS(relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.OPTIONS(relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) HEAD(s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.HEAD(s, e.unwrap(b...)...)
+func (e *Engine) HEAD(relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.HEAD(relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) Match(strings []string, s string, b ...HandlerBody) IRoutes {
-	ir := e.Engine.Match(strings, s, e.unwrap(b...)...)
+func (e *Engine) Match(httpMethods []string, relativePath string, handlerBodies ...HandlerBody) IRoutes {
+	ir := e.Engine.Match(httpMethods, relativePath, e.unwrap(handlerBodies...)...)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) StaticFile(s string, s2 string) IRoutes {
-	ir := e.Engine.StaticFile(s, s2)
+func (e *Engine) StaticFile(relativePath string, filepath string) IRoutes {
+	ir := e.Engine.StaticFile(relativePath, filepath)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) StaticFileFS(s string, s2 string, system http.FileSystem) IRoutes {
-	ir := e.Engine.StaticFileFS(s, s2, system)
+func (e *Engine) StaticFileFS(relativePath string, filepath string, system http.FileSystem) IRoutes {
+	ir := e.Engine.StaticFileFS(relativePath, filepath, system)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) Static(s string, s2 string) IRoutes {
-	ir := e.Engine.Static(s, s2)
+func (e *Engine) Static(relativePath string, filepath string) IRoutes {
+	ir := e.Engine.Static(relativePath, filepath)
 	return e.returnObject(ir)
 }
 
-func (e *Engine) StaticFS(s string, system http.FileSystem) IRoutes {
-	ir := e.Engine.StaticFS(s, system)
+func (e *Engine) StaticFS(relativePath string, system http.FileSystem) IRoutes {
+	ir := e.Engine.StaticFS(relativePath, system)
 	return e.returnObject(ir)
 }
 
@@ -128,8 +128,13 @@ func (e *Engine) returnObject(ginIRoute gin.IRoutes) IRoutes {
 	default:
 		panic("unhandled concrete value of IRoutes")
 	}
+}
 
-	return nil
+func (e *Engine) SetFinisher(finisher Finisher) *Engine {
+	return &Engine{
+		Engine:   e.Engine,
+		finisher: finisher,
+	}
 }
 
 func NewEngine() *Engine {

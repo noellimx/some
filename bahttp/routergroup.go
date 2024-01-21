@@ -30,16 +30,16 @@ type IRoutes interface {
 	StaticFS(string, http.FileSystem) IRoutes
 }
 
-var _ IRouter = (*RouterGroup)(nil)
-
 type RouterGroup struct {
 	*gin.RouterGroup
 	finisher Finisher
 }
 
-func (r *RouterGroup) Group(relativePath string, handlers ...HandlerBody) *RouterGroup {
+var _ IRouter = (*RouterGroup)(nil)
+
+func (r *RouterGroup) Group(relativePath string, handlerBodies ...HandlerBody) *RouterGroup {
 	return &RouterGroup{
-		RouterGroup: r.RouterGroup.Group(relativePath, r.unwrap(handlers...)...),
+		RouterGroup: r.RouterGroup.Group(relativePath, r.unwrap(handlerBodies...)...),
 		finisher:    r.finisher,
 	}
 }
@@ -49,53 +49,53 @@ func (r *RouterGroup) Use(handlerFunc ...gin.HandlerFunc) IRoutes {
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) Handle(s string, s2 string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.Handle(s, s2, r.unwrap(b...)...)
+func (r *RouterGroup) Handle(s string, s2 string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.Handle(s, s2, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) Any(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.Any(s, r.unwrap(b...)...)
+func (r *RouterGroup) Any(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.Any(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) GET(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.GET(s, r.unwrap(b...)...)
+func (r *RouterGroup) GET(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.GET(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) POST(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.POST(s, r.unwrap(b...)...)
+func (r *RouterGroup) POST(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.POST(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) DELETE(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.DELETE(s, r.unwrap(b...)...)
+func (r *RouterGroup) DELETE(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.DELETE(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) PATCH(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.PATCH(s, r.unwrap(b...)...)
+func (r *RouterGroup) PATCH(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.PATCH(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) PUT(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.PUT(s, r.unwrap(b...)...)
+func (r *RouterGroup) PUT(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.PUT(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) OPTIONS(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.OPTIONS(s, r.unwrap(b...)...)
+func (r *RouterGroup) OPTIONS(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.OPTIONS(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) HEAD(s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.HEAD(s, r.unwrap(b...)...)
+func (r *RouterGroup) HEAD(s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.HEAD(s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
-func (r *RouterGroup) Match(strings []string, s string, b ...HandlerBody) IRoutes {
-	ir := r.RouterGroup.Match(strings, s, r.unwrap(b...)...)
+func (r *RouterGroup) Match(strings []string, s string, handlerBodies ...HandlerBody) IRoutes {
+	ir := r.RouterGroup.Match(strings, s, r.unwrap(handlerBodies...)...)
 	return r.returnObject(ir)
 }
 
@@ -124,12 +124,19 @@ func (r *RouterGroup) unwrap(bS ...HandlerBody) gin.HandlersChain {
 
 	for _, b := range bS {
 		if b == nil {
-			panic("nil bAhandler")
+			panic("nil HandlerBody")
 		}
 		chain = append(chain, r.finisher(b))
 	}
 
 	return chain
+}
+
+func (r *RouterGroup) SetFinisher(finisher Finisher) *RouterGroup {
+	return &RouterGroup{
+		RouterGroup: r.RouterGroup,
+		finisher:    finisher,
+	}
 }
 
 func (r *RouterGroup) returnObject(ginIRoute gin.IRoutes) IRoutes {
@@ -148,6 +155,4 @@ func (r *RouterGroup) returnObject(ginIRoute gin.IRoutes) IRoutes {
 	default:
 		panic("unhandled concrete value of IRoutes")
 	}
-
-	return nil
 }
