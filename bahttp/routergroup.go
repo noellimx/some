@@ -119,24 +119,22 @@ func (r *RouterGroup) StaticFS(relativePath string, fs http.FileSystem) IRoutes 
 	return r.returnObject(ir)
 }
 
+func (r *RouterGroup) SetFinisher(finisher Finisher) *RouterGroup {
+	return &RouterGroup{
+		RouterGroup: r.RouterGroup,
+		finisher:    finisher,
+	}
+}
+
 func (r *RouterGroup) unwrap(bS ...HandlerBody) gin.HandlersChain {
 	chain := make(gin.HandlersChain, 0)
-
 	for _, b := range bS {
 		if b == nil {
 			panic("nil HandlerBody")
 		}
 		chain = append(chain, r.finisher(b))
 	}
-
 	return chain
-}
-
-func (r *RouterGroup) SetFinisher(finisher Finisher) *RouterGroup {
-	return &RouterGroup{
-		RouterGroup: r.RouterGroup,
-		finisher:    finisher,
-	}
 }
 
 func (r *RouterGroup) returnObject(ginIRoutes gin.IRoutes) IRoutes {

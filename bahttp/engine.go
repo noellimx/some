@@ -5,8 +5,18 @@ import (
 	"net/http"
 )
 
-type Finisher func(HandlerBody) gin.HandlerFunc
 type HandlerBody func(c *gin.Context) (int, interface{})
+
+type Finisher func(HandlerBody) gin.HandlerFunc
+
+func defaultJSONFinisher() func(body HandlerBody) gin.HandlerFunc {
+	return func(body HandlerBody) gin.HandlerFunc {
+		return func(c *gin.Context) {
+			httpStatus, resp := body(c)
+			c.JSON(httpStatus, resp)
+		}
+	}
+}
 
 type Engine struct {
 	*gin.Engine
@@ -14,21 +24,6 @@ type Engine struct {
 }
 
 var _ IRouter = (*Engine)(nil)
-
-func (e *Engine) unwrap(bS ...HandlerBody) gin.HandlersChain {
-
-	chain := make(gin.HandlersChain, 0)
-
-	for _, b := range bS {
-		if b == nil {
-			panic("nil HandlerBody")
-		}
-
-		chain = append(chain, e.finisher(b))
-	}
-
-	return chain
-}
 
 func (e *Engine) Group(relativePath string, handlers ...HandlerBody) *RouterGroup {
 	return &RouterGroup{
@@ -112,6 +107,17 @@ func (e *Engine) StaticFS(relativePath string, fs http.FileSystem) IRoutes {
 	return e.returnObject(ir)
 }
 
+func (e *Engine) unwrap(bS ...HandlerBody) gin.HandlersChain {
+	chain := make(gin.HandlersChain, 0)
+	for _, b := range bS {
+		if b == nil {
+			panic("nil HandlerBody")
+		}
+		chain = append(chain, e.finisher(b))
+	}
+	return chain
+}
+
 func (e *Engine) returnObject(ginIRoutes gin.IRoutes) IRoutes {
 	switch v := ginIRoutes.(type) {
 	case *gin.Engine:
@@ -133,15 +139,6 @@ func (e *Engine) SetFinisher(finisher Finisher) *Engine {
 	return &Engine{
 		Engine:   e.Engine,
 		finisher: finisher,
-	}
-}
-
-func defaultJSONFinisher() func(body HandlerBody) gin.HandlerFunc {
-	return func(body HandlerBody) gin.HandlerFunc {
-		return func(c *gin.Context) {
-			httpStatus, resp := body(c)
-			c.JSON(httpStatus, resp)
-		}
 	}
 }
 
