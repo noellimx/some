@@ -107,9 +107,16 @@ func (e *Engine) StaticFS(relativePath string, fs http.FileSystem) IRoutes {
 	return e.returnObject(ir)
 }
 
-func (e *Engine) unwrap(bS ...HandlerBody) gin.HandlersChain {
+func (e *Engine) SetFinisher(finisher Finisher) *Engine {
+	return &Engine{
+		Engine:   e.Engine,
+		finisher: finisher,
+	}
+}
+
+func (e *Engine) unwrap(handlerBodies ...HandlerBody) gin.HandlersChain {
 	chain := make(gin.HandlersChain, 0)
-	for _, b := range bS {
+	for _, b := range handlerBodies {
 		if b == nil {
 			panic("nil HandlerBody")
 		}
@@ -132,13 +139,6 @@ func (e *Engine) returnObject(ginIRoutes gin.IRoutes) IRoutes {
 		}
 	default:
 		panic("unhandled concrete value of IRoutes")
-	}
-}
-
-func (e *Engine) SetFinisher(finisher Finisher) *Engine {
-	return &Engine{
-		Engine:   e.Engine,
-		finisher: finisher,
 	}
 }
 

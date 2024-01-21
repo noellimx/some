@@ -126,9 +126,9 @@ func (r *RouterGroup) SetFinisher(finisher Finisher) *RouterGroup {
 	}
 }
 
-func (r *RouterGroup) unwrap(bS ...HandlerBody) gin.HandlersChain {
+func (r *RouterGroup) unwrap(handlerBodies ...HandlerBody) gin.HandlersChain {
 	chain := make(gin.HandlersChain, 0)
-	for _, b := range bS {
+	for _, b := range handlerBodies {
 		if b == nil {
 			panic("nil HandlerBody")
 		}
