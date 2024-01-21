@@ -136,7 +136,9 @@ func NewEngine() *Engine {
 	return &Engine{
 		Engine: gin.New(),
 		finisher: func(body HandlerBody) gin.HandlerFunc {
-			return func(c *gin.Context) {}
+			return func(c *gin.Context) {
+				body(c)
+			}
 		},
 	}
 }
